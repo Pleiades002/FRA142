@@ -18,7 +18,7 @@ int main()
     link1.insert(&Node2, 0);
     link1.insert(&Node3, 2);
     link1.insert(&Node4, 0);
-    
+
     link1.curr = link1.head;
 
     while (link1.curr != NULL)
@@ -29,7 +29,8 @@ int main()
     link1.remove(1);
     cout << "----------------------" << endl;
     link1.curr = link1.head;
-    while (link1.curr != NULL){
+    while (link1.curr != NULL)
+    {
         cout << link1.curr->getValue() << endl;
         link1.curr = link1.curr->getNext();
     }
