@@ -59,8 +59,9 @@ FONT = pg.font.Font(None, 32)
 input_box1 = InputBox(100, 100, 140, 32)  # สร้าง InputBox1
 input_box2 = InputBox(100, 150, 140, 32)  # สร้าง InputBox2
 input_box3 = InputBox(100, 200, 140, 32)
+input_box4 = InputBox(100, 250, 140, 32)
 # เก็บ InputBox ไว้ใน list เพื่อที่จะสามารถนำไปเรียกใช้ได้ง่าย
-input_boxes = [input_box1, input_box2, input_box3]
+input_boxes = [input_box1, input_box2, input_box3, input_box4]
 run = True
 
 while run:
