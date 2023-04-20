@@ -1,7 +1,6 @@
 import sys
 import pygame as pg
-
-from Class.Rectangle import Rectangle
+import webbrowser
 from Class.Button import Button
 
 
@@ -27,7 +26,10 @@ class InputBox:
 
         if event.type == pg.KEYDOWN:
             if self.active:
-                if event.key == pg.K_RETURN:
+                if self == input_box3:
+                    if event.unicode.isnumeric():
+                        self.text += event.unicode
+                elif event.key == pg.K_RETURN:
                     print(self.text)
                     self.text = ''
                 elif event.key == pg.K_BACKSPACE:
@@ -50,22 +52,75 @@ class InputBox:
 
 
 pg.init()
-screen_width, screen_heigh = 1000, 500
+screen_width, screen_heigh = 500, 750
+submit_width, submit_heigh = 300, 300
 screen = pg.display.set_mode((screen_width, screen_heigh))
-# ตั้งตัวแปรให้เก็บค่าสี เพื่อนำไปใช้เติมสีให้กับกล่องข้อความตอนที่คลิกที่กล่องนั้นๆอยู่
+
 COLOR_INACTIVE = pg.Color('lightskyblue3')
 COLOR_ACTIVE = pg.Color('dodgerblue2')     # ^^^
-FONT = pg.font.Font(None, 32)
-input_box1 = InputBox(100, 100, 140, 32)  # สร้าง InputBox1
-input_box2 = InputBox(100, 150, 140, 32)  # สร้าง InputBox2
-input_box3 = InputBox(100, 200, 140, 32)
-input_box4 = InputBox(100, 250, 140, 32)
-# เก็บ InputBox ไว้ใน list เพื่อที่จะสามารถนำไปเรียกใช้ได้ง่าย
-input_boxes = [input_box1, input_box2, input_box3, input_box4]
-run = True
+fontSize = 32
+FONT = pg.font.Font(None, fontSize)
+# (text,is smooth?,letter color,background color)
 
-while run:
+input_box1 = InputBox(150, 100, 300, fontSize)  # สร้าง InputBox1
+input_box2 = InputBox(150, 200, 500, fontSize)  # สร้าง InputBox2
+input_box3 = InputBox(150, 300, 140, fontSize)
+guide0 = FONT.render('Registor', True, 'black', (255, 255, 255))
+disGuide0 = guide0.get_rect()  # text size
+disGuide0.center = (250, 25+(fontSize/2))
+
+guide1 = FONT.render('Firstname: ', True, 'black', (255, 255, 255))
+disGuide1 = guide1.get_rect()  # text size
+disGuide1.center = (150, 100-(fontSize/2))
+
+guide2 = FONT.render('Lastname: ', True, 'black', (255, 255, 255))
+disGuide2 = guide2.get_rect()  # text size
+disGuide2.center = (150, 200-(fontSize/2))
+
+guide3 = FONT.render('Age: ', True, 'black', (255, 255, 255))
+disGuide3 = guide3.get_rect()  # text size
+disGuide3.center = (150, 300-(fontSize/2))
+
+UnSubmit = Button(0, 0, 10, 10)
+submit = Button((screen_width/2) - (submit_width/2),
+                (screen_heigh/3) + (submit_heigh/2), submit_width, submit_heigh)
+input_boxes = [input_box1, input_box2, input_box3]
+isRun = True
+failSafe = False
+
+while (isRun):
     screen.fill((255, 255, 255))
+    screen.blit(guide0, disGuide0)
+    screen.blit(guide1, disGuide1)
+    screen.blit(guide2, disGuide2)
+    screen.blit(guide3, disGuide3)
+    firstName = input_box1.text
+    lastName = input_box2.text
+    age = input_box3.text
+    text = FONT.render('Hello {} {}! You are {} years old.'.format(
+        firstName, lastName, age), True, 'black', (0, 255, 0))
+    textRect = text.get_rect()  # text size
+    textRect.center = ((screen_width/2), (screen_heigh/3) + submit_heigh)
+
+    UnSubmit.draw(screen)
+    submit.draw(screen)
+
+    if submit.isMouseOn():
+        submit.color = pg.Color(255, 255, 0)
+        if submit.isMouseOnHold() and not failSafe:
+            failSafe = True
+            submit.color = pg.Color(255, 0, 0)
+            webbrowser.open(r"https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    else:
+        failSafe = False
+        submit.color = pg.Color(0, 255, 0)
+
+    if UnSubmit.isMouseOn():
+        UnSubmit.color = pg.Color(255, 0, 0)
+        if UnSubmit.isMouseOnHold():
+            screen.blit(text, textRect)
+    else:
+        UnSubmit.color = pg.Color(255, 255, 255)
     for box in input_boxes:  # ทำการเรียก InputBox ทุกๆตัว โดยการ Loop เข้าไปยัง list ที่เราเก็บค่า InputBox ไว้
         box.update()  # เรียกใช้ฟังก์ชัน update() ของ InputBox
         # เรียกใช้ฟังก์ชัน draw() ของ InputBox เพื่อทำการสร้างรูปบน Screen
@@ -78,5 +133,4 @@ while run:
             pg.quit()
             run = False
 
-    pg.time.delay(1)
     pg.display.update()
