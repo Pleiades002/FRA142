@@ -37,7 +37,7 @@ class InputBox:
                 else:
                     self.text += event.unicode
                 # Re-render the text.
-                self.txt_surface = FONT.render(self.text, True, self.color)
+                self.txt_surface = FONT.render(self.text, True, 'black')
 
     def update(self):
         # Resize the box if the text is too long.
@@ -65,7 +65,7 @@ FONT = pg.font.Font(None, fontSize)
 input_box1 = InputBox(150, 100, 300, fontSize)  # สร้าง InputBox1
 input_box2 = InputBox(150, 200, 500, fontSize)  # สร้าง InputBox2
 input_box3 = InputBox(150, 300, 140, fontSize)
-guide0 = FONT.render('Registor', True, 'black', (255, 255, 255))
+guide0 = FONT.render('Register', True, 'black', (255, 255, 255))
 disGuide0 = guide0.get_rect()  # text size
 disGuide0.center = (250, 25+(fontSize/2))
 
@@ -87,6 +87,7 @@ submit = Button((screen_width/2) - (submit_width/2),
 input_boxes = [input_box1, input_box2, input_box3]
 isRun = True
 failSafe = False
+flag = False
 
 while (isRun):
     screen.fill((255, 255, 255))
@@ -118,9 +119,11 @@ while (isRun):
     if UnSubmit.isMouseOn():
         UnSubmit.color = pg.Color(255, 0, 0)
         if UnSubmit.isMouseOnHold():
-            screen.blit(text, textRect)
+            flag = True
     else:
         UnSubmit.color = pg.Color(255, 255, 255)
+    if flag:
+        screen.blit(text, textRect)
     for box in input_boxes:  # ทำการเรียก InputBox ทุกๆตัว โดยการ Loop เข้าไปยัง list ที่เราเก็บค่า InputBox ไว้
         box.update()  # เรียกใช้ฟังก์ชัน update() ของ InputBox
         # เรียกใช้ฟังก์ชัน draw() ของ InputBox เพื่อทำการสร้างรูปบน Screen
