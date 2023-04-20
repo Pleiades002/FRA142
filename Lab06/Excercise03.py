@@ -89,6 +89,7 @@ isRun = True
 failSafe = False
 flag = False
 
+
 while (isRun):
     screen.fill((255, 255, 255))
     screen.blit(guide0, disGuide0)
